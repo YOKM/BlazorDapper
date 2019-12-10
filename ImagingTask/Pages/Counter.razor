@@ -1,0 +1,68 @@
+﻿@page "/counter"
+@using ImagingTask.Services
+@using ImagingTask.Model
+@inject InterfaceImagingTask ImagingService
+@inject InterfaceDetailTask DetailService
+
+
+<h1>Counter</h1>
+
+<p>Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+
+<h2>Imaging Tasks</h2>
+
+@if (imagingTaskModels == null)
+{
+    <p>Loading..</p>
+
+}
+else
+{
+    foreach (var task in imagingTaskModels)
+    {
+        <p>@task.Jobname :  @task.EmailNotificationAddress</p>
+
+        @*<label style="font-size:10px" @onclick="@(async () => await GetDetailforTask(task.Id))">Detail </label>
+        if (showDetail)
+        {
+            <p>@DetailTask.EmailNotificationAddress</p>
+        }*@
+    }
+
+}
+
+
+
+@code {
+    IEnumerable<ImagingTaskModel> imagingTaskModels;
+
+    ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+
+    int JobID = 0;
+    bool showDetail=false;
+
+    //City city = new City()
+
+    int currentCount = 0;
+
+    void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        imagingTaskModels = await ImagingService.GetAllImagingTask();  // Imaging service been injected at the top
+
+    }
+
+    public async Task GetDetailforTask(int JobID)
+    {
+        DetailTask = await DetailService.SingleTask(JobID);
+        showDetail = true;
+    }
+
+}
