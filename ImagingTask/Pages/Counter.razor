@@ -40,9 +40,9 @@ else
     IEnumerable<ImagingTaskModel> imagingTaskModels;
 
     ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
-       int nJobID = 0;
-    int JobID = 0;
-    bool showDetail=false;
+   
+  
+ 
 
     //City city = new City()
 
@@ -62,7 +62,7 @@ else
     public async Task GetDetailforTask(int JobID)
     {
         DetailTask = await DetailService.SingleTask(JobID);
-        showDetail = true;
+      
     }
 
 }

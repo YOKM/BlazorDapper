@@ -1,0 +1,138 @@
+﻿@page "/ListofTask"
+@using ImagingTask.Model
+@using ImagingTask.Services
+
+@inject InterfaceImagingTask ImagingTaskServices
+@inject InterfaceDetailTask DetailTaskServices
+
+
+<h1></h1>
+
+
+@if (AllTasks == null)
+{
+   <p>Loading ... </p>
+}
+else
+{
+<table class=" table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Jobname</th>
+            <th>Schedule Time</th>
+            <th>Is Active</th>
+            <th>Description</th>
+            <th>Job Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var task in AllTasks)
+        {
+            <tr>
+                <td>
+                    @if (task.Id == JobId)
+                    {
+                        <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">+</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">-</button>
+                    }
+
+
+                </td>
+
+                <td>@task.Jobname </td>
+                <td>@task.scheduleTIME </td>
+                <td>@task.IsActive </td>
+                <td>@task.Description </td>
+                <td>@task.JOBTYPE </td>
+            </tr>
+            @if (showDetail)
+            {
+                @if (DetailTask != null)
+                {
+                    <tr>
+                        <p>@DetailTask.EmailNotificationAddress</p>
+                        <p>@DetailTask.FileExtensiontoUpload</p>
+                        <p>@DetailTask.SFtpdownloadTo</p>
+                        <p>@DetailTask.SFtpuploadto</p>
+                    </tr>
+
+                }
+
+
+            }
+
+
+        }
+
+    </tbody>
+    </table>
+}
+
+
+
+
+ @functions{
+
+     IEnumerable<ImagingTaskModel> AllTasks;
+
+     ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+
+     int JobId = 0;
+
+     int count = 0;   // variable to use for pagination
+     bool showDetail = false;
+
+
+     protected override async Task OnInitializedAsync()
+     {
+         AllTasks = await ImagingTaskServices.GetAllImagingTask();
+         count = AllTasks.Count();  // total of task in table
+     }
+
+
+
+     async Task ShowDetails(int JobId_fromMasterAPI)
+     {
+         // showDetail = true;
+
+         // if id = JOBid
+         //then showdetails == true
+         if (JobId != JobId_fromMasterAPI)
+         {
+             showDetail = true;
+         }
+         else
+         {
+             if (showDetail == false)
+             {
+                 //  Imagename = "Images/expand.png";
+
+                 showDetail = true;
+
+             }
+             else
+             {
+                 // Imagename = "Images/toggle.png";
+                 showDetail = false;
+             }
+         }
+
+         JobId = JobId_fromMasterAPI;
+
+         // should use query to get the details info 
+         //instead of the whole stored procedure ..
+
+         // send detail to another list or 
+
+
+          DetailTask = await DetailTaskServices.SingleTask(JobId_fromMasterAPI);
+
+     }
+
+  
+
+   }
