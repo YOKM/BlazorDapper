@@ -1,0 +1,45 @@
+﻿@page "/EditTask/{Id:int}"
+@using ImagingTask.Model;
+@using ImagingTask.Services;
+@inject InterfaceImagingTask TaskServiceInterface;
+
+@inject InterfaceDetailTask DetailTaskServices
+
+<h1>Edit Task</h1>
+
+
+<hr />
+
+<form>
+    <div class="row">
+        <div class="col-md-8">
+            <p>@schTaskModel.Description</p>
+            <p>@DetailTask.EmailNotificationAddress</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group">
+            <input type="button" />
+            <input type="button" />
+        </div>
+    </div>
+
+
+</form>
+
+@code{
+    [Parameter]
+    public int Id { get; set; }
+
+    ImagingTaskModel schTaskModel = new ImagingTaskModel();
+    ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        schTaskModel = await TaskServiceInterface.SingleTask(Id);
+        DetailTask = await DetailTaskServices.SingleTask(Id);
+    }
+
+}

@@ -12,7 +12,7 @@ namespace ImagingTask.Services
    public interface InterfaceImagingTask
     {
       
-        Task<IEnumerable<ImagingTaskModel>> GetAllImagingTask();
+        Task<IEnumerable<ImagingTaskModel>> GetAllImagingTask(int takeRow, int skipRow);
 
         Task<bool> CreateImagingTask(ImagingScheduleJob imagingSchTask);
 

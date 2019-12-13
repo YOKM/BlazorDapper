@@ -11,128 +11,345 @@
 
 @if (AllTasks == null)
 {
-   <p>Loading ... </p>
+    <p>Loading ... </p>
 }
 else
 {
-<table class=" table">
-    <thead>
-        <tr>
-            <th></th>
-            <th>Jobname</th>
-            <th>Schedule Time</th>
-            <th>Is Active</th>
-            <th>Description</th>
-            <th>Job Type</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var task in AllTasks)
-        {
+    <table class=" table">
+        <thead>
             <tr>
-                <td>
-                    @if (task.Id == JobId)
-                    {
-                        <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">+</button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">-</button>
-                    }
-
-
-                </td>
-
-                <td>@task.Jobname </td>
-                <td>@task.scheduleTIME </td>
-                <td>@task.IsActive </td>
-                <td>@task.Description </td>
-                <td>@task.JOBTYPE </td>
+                <th></th>
+                <th>Jobname</th>
+                <th>Schedule Time</th>
+                <th>Is Active</th>
+                <th>Description</th>
+                <th>Job Type</th>
             </tr>
-            @if (showDetail)
+        </thead>
+        <tbody>
+            @foreach (var task in AllTasks)
             {
-                @if (DetailTask != null)
-                {
-                    <tr>
-                        <p>@DetailTask.EmailNotificationAddress</p>
-                        <p>@DetailTask.FileExtensiontoUpload</p>
-                        <p>@DetailTask.SFtpdownloadTo</p>
-                        <p>@DetailTask.SFtpuploadto</p>
-                    </tr>
+                <tr>
+                    <td>
+                        @if (task.Id == JobId)
+                        {
+                            <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">+</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">-</button>
+                        }
 
-                }
+
+                    </td>
+
+                    <td>@task.Jobname </td>
+                    <td>@task.scheduleTIME </td>
+                    <td>@task.IsActive </td>
+                    <td>@task.Description </td>
+                    <td>@task.JOBTYPE </td>
+                    <td>
+                        <a href="/EditTask/@task.Id ">Edit</a>
+                    </td>
+                </tr>
+
+
+                @if ((showDetail) && (DetailTask != null) && (task.Id == JobId))
+                {
+
+                    <tr style="height: 30px; background-color:#336699 ;
+                            color:#FFFFFF ;border: solid 1px #659EC7;" colspan="6">
+                        <td colspan="6">
+                            @*<p>@DetailTask.Id</p>
+                                <p>@DetailTask.Jobname</p>
+                                <p>@DetailTask.Jobid</p>*@
+
+
+
+
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.EmailNotificationAddress))
+                            {
+
+                        <tr>
+                            <td>Email Notifications</td>
+                            <td>@DetailTask.EmailNotificationAddress</td>
+
+                        </tr>
+
+                    }
+
+
+
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.JobdetailsType))
+                            {
+
+                                <tr>
+                                    <td>JobType :</td>
+                                    <td>@DetailTask.JobdetailsType </td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.SFtphost))
+                            {
+                                <tr>
+                                    <td>sFTP Host :</td>
+                                    <td>@DetailTask.SFtphost </td>
+
+                                </tr>
+
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.SFtpuploadFrom))
+                            {
+                                <tr>
+                                    <td>sFTP Upload from :</td>
+                                    <td>@DetailTask.SFtpuploadFrom </td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.SFtpuploadto))
+                            {
+                                <tr>
+                                    <td>sFTP Upload to :</td>
+                                    <td>@DetailTask.SFtpuploadto</td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.SFtpdownloadFrom))
+                            {
+                                <tr>
+                                    <td>sFTP Download from :</td>
+                                    <td>@DetailTask.SFtpdownloadFrom</td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.SFtpdownloadTo))
+                            {
+                                <tr>
+                                    <td>sFTP Dpwnload to :</td>
+                                    <td>@DetailTask.SFtpdownloadTo</td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.UsernamesFtp))
+                            {
+                                <tr>
+                                    <td>Username :</td>
+                                    <td>@DetailTask.UsernamesFtp </td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.SshfingerPrint))
+                            {
+                                <tr>
+                                    <td>SSH Fingerprint :</td>
+                                    <td>@DetailTask.SshfingerPrint </td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.Extra1))
+                            {
+                                <tr>
+                                    <td>Extra1 :</td>
+                                    <td>@DetailTask.Extra1</td>
+
+                                </tr>
+
+                            }
+                            @*<p>@DetailTask.PaswordsFtp</p>*@
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.Extra2))
+                            {
+                                <tr>
+                                    <td>Extra2 :</td>
+                                    <td>@DetailTask.Extra2</td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.Extra3))
+                            {
+                                <tr>
+                                    <td>Extra3 :</td>
+                                    <td>@DetailTask.Extra3</td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.Extra4))
+                            {
+                                <tr>
+                                    <td>Extra4 :</td>
+                                    <td>@DetailTask.Extra4</td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.Extra5))
+                            {
+                                <tr>
+                                    <td>Extra5 :</td>
+                                    <td>@DetailTask.Extra5</td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.TimeSpanWait))
+                            {
+                                <tr>
+                                    <td>TimeSpanWait :</td>
+                                    <td>@DetailTask.TimeSpanWait </td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.FileExtensiontoUpload))
+                            {
+                                <tr>
+                                    <td>File Extension to Upload : </td>
+                                    <td>@DetailTask.FileExtensiontoUpload </td>
+
+                                </tr>
+
+                            }
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.PortNumber))
+                            {
+                                <tr>
+                                    <td>Port Number :</td>
+                                    <td>@DetailTask.PortNumber</td>
+
+                                </tr>
+
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(@DetailTask.WordsToCheck))
+                            {
+                                <tr>
+                                    <td>Words to Check :</td>
+                                    <td>@DetailTask.WordsToCheck </td>
+
+                                </tr>
+
+                            }
+
+                            </td>
+
+                            </tr>
+
+                        }
+
+
 
 
             }
 
-
-        }
-
-    </tbody>
+        </tbody>
     </table>
+
+
+    <label bind="nav">@count/@(skip + 1)</label>
+
+    if (top + skip > 1)
+    {
+        <button @onclick=@Previous> ← </button>
+    }
+
+    if (top + skip < count)
+    {
+        <button @onclick=@Next> → </button>
+    }
+
 }
 
 
 
 
- @functions{
+@functions{
 
-     IEnumerable<ImagingTaskModel> AllTasks;
+    IEnumerable<ImagingTaskModel> AllTasks;
 
-     ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+    ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
 
-     int JobId = 0;
+    int JobId = 0;
 
-     int count = 0;   // variable to use for pagination
-     bool showDetail = false;
-
-
-     protected override async Task OnInitializedAsync()
-     {
-         AllTasks = await ImagingTaskServices.GetAllImagingTask();
-         count = AllTasks.Count();  // total of task in table
-     }
+    int count = 0;   // variable to use for pagination
+    bool showDetail = false;
+    int top = 3;
+    int skip = 0;
 
 
 
-     async Task ShowDetails(int JobId_fromMasterAPI)
-     {
-         // showDetail = true;
 
-         // if id = JOBid
-         //then showdetails == true
-         if (JobId != JobId_fromMasterAPI)
-         {
-             showDetail = true;
-         }
-         else
-         {
-             if (showDetail == false)
-             {
-                 //  Imagename = "Images/expand.png";
+    protected override async Task OnInitializedAsync()
+    {
+        AllTasks = await ImagingTaskServices.GetAllImagingTask(0, top);
+        //  count = AllTasks.Count();
+        count = 31;
+        // AllTasks = AllTasks.Skip(5).Take(3);     // total of task in table
+    }
 
-                 showDetail = true;
+    async Task Next()
+    {
+        skip = skip + 3;
+        AllTasks = await ImagingTaskServices.GetAllImagingTask(skip, top);
+    }
 
-             }
-             else
-             {
-                 // Imagename = "Images/toggle.png";
-                 showDetail = false;
-             }
-         }
-
-         JobId = JobId_fromMasterAPI;
-
-         // should use query to get the details info 
-         //instead of the whole stored procedure ..
-
-         // send detail to another list or 
+    async Task Previous()
+    {
+        if (skip > 3)
+        {
+            skip = skip - 3;
+        }
 
 
-          DetailTask = await DetailTaskServices.SingleTask(JobId_fromMasterAPI);
+        AllTasks = await ImagingTaskServices.GetAllImagingTask(skip, top);
 
-     }
+    }
 
-  
+    async Task ShowDetails(int JobId_fromMasterAPI)
+    {
+        // showDetail = true;
 
-   }
+        // if id = JOBid
+        //then showdetails == true
+        if (JobId != JobId_fromMasterAPI)
+        {
+            showDetail = true;
+        }
+        else
+        {
+            if (showDetail == false)
+            {
+                //  Imagename = "Images/expand.png";
+
+                showDetail = true;
+
+            }
+            else
+            {
+                // Imagename = "Images/toggle.png";
+                showDetail = false;
+            }
+        }
+
+        JobId = JobId_fromMasterAPI;
+
+        // should use query to get the details info
+        //instead of the whole stored procedure ..
+
+        // send detail to another list or
+
+
+        DetailTask = await DetailTaskServices.SingleTask(JobId_fromMasterAPI);
+
+    }
+
+
+
+}
