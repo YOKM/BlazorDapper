@@ -3,43 +3,290 @@
 @using ImagingTask.Services;
 @inject InterfaceImagingTask TaskServiceInterface;
 
-@inject InterfaceDetailTask DetailTaskServices
+@inject InterfaceDetailTask DetailTaskServices;
+
 
 <h1>Edit Task</h1>
 
 
 <hr />
 
-<form>
-    <div class="row">
-        <div class="col-md-8">
-            <p>@schTaskModel.Description</p>
-            <p>@DetailTask.EmailNotificationAddress</p>
+@*<form>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="Description" class=" custom-control-label">Description</label>
+                    <input for="Description" class=" form-control" @bind="@schTaskModel.Description" />
+
+                    <p>@DetailTask.EmailNotificationAddress</p>
+                </div>
+                <div class="form-group">
+                    <label for="ScheduleTIME" class=" custom-control-label">ScheduleTIME</label>
+                    <input for="ScheduleTIME" class=" form-control" @bind="@schTaskModel.scheduleTIME" />
+
+                    <p>@DetailTask.EmailNotificationAddress</p>
+                </div>
+
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <div class="form-group">
-            <input type="button" />
-            <input type="button" />
+
+        <div class="row">
+            <div class="form-group">
+                <input type="button" />
+                <input type="button" />
+            </div>
         </div>
-    </div>
 
 
-</form>
+    </form>*@
 
-@code{
-    [Parameter]
-    public int Id { get; set; }
+<div>
 
-    ImagingTaskModel schTaskModel = new ImagingTaskModel();
-    ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+    <table style="border: solid 1px #000000;background-color:beige;
+    padding: 5px; width:100%; height: 100%">
+
+        <tr>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">Job Name</label>
+                <input type="text" class="form-control" @bind-value="@schTaskModel.Jobname" />
 
 
-    protected override async Task OnInitializedAsync()
-    {
-        schTaskModel = await TaskServiceInterface.SingleTask(Id);
-        DetailTask = await DetailTaskServices.SingleTask(Id);
-    }
+            </td>
+
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">Schedule Time</label>
+                <input type="text" class="form-control" @bind-value="@schTaskModel.scheduleTIME" />
+
+
+            </td>
+
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">Is Active</label>
+                <input type="text" class="form-control" @bind-value="@schTaskModel.IsActive" />
+
+
+            </td>
+
+        </tr>
+
+
+    </table>
+
+
+
+    <br />
+    <p>Description:</p>
+    <table style="border: solid 1px #000000;
+    padding: 5px; width:100%; height: 100%">
+
+        <tr>
+            @*<td class="tg-5d1u"><input type="text" class="form-control" value="@EditTask.Description" /></td>*@
+            <td>
+                @*<label>Description</label>*@
+                <textarea type="text" class="form-control" @bind="@schTaskModel.Description" />
+
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+
+
+@if (schTaskModel.JOBTYPE == "sFTP_Upload" || schTaskModel.JOBTYPE == "sFTP_Download")
+{
+    <br />
+    <p>Host Details : </p>
+
+    <table style="border: solid 1px #000000;background-color:aliceblue;
+    padding: 25px; width:100%; height: 100%">
+        <tr>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">sFTP Host</label>  <input type="text" class="form-control" @bind-value="@DetailTask.SFtphost" />
+
+            </td>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">PortNumber</label>     <input type="text" class="form-control" @bind-value="@DetailTask.PortNumber" />
+
+            </td>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">Username</label>    <input type="text" class="form-control" @bind-value="@DetailTask.UsernamesFtp" />
+
+            </td>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">SSH FingerPrint</label>    <input type="text" class="form-control" @bind-value="@DetailTask.SshfingerPrint" />
+
+            </td>
+
+        </tr>
+    </table>
+
+    <p>Other details:</p>
+    <table style="border: solid 1px #000000;background-color:aliceblue;
+    padding: 5px; width:100%; height: 100%">
+        <tr>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">Date Folder Format</label>
+                <input type="text" class="form-control" @bind-value="@DetailTask.Extra1" />
+
+            </td>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">SSH Protocol</label>   <input type="text" class="form-control" @bind-value="@DetailTask.Extra2" />
+
+            </td>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">File Extesion</label>   <input type="text" class="form-control" @bind-value="@DetailTask.FileExtensiontoUpload" />
+
+            </td>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">Timespan to Wait</label>  <input type="text" class="form-control" @bind-value="@DetailTask.TimeSpanWait" />
+
+            </td>
+        </tr>
+    </table>
+    <br />
 
 }
+
+
+@if (schTaskModel.JOBTYPE == "sFTP_Upload")
+{
+    <div>
+
+
+
+        <br />
+        <p>Upload Directories: </p>
+        <table style="border: solid 1px #000000;background-color:aliceblue;
+         padding: 5px; width:100%; height: 100%">
+            <tr>
+                <td class="tg-5d1u">
+                    <label style=" font-size:x-small ; color:darkblue">From</label>   <input type="text" class="form-control" @bind-value="@DetailTask.SFtpuploadFrom" />
+
+                </td>
+                <td class="tg-5d1u">
+                    <label style=" font-size:x-small ; color:darkblue">To</label>    <input type="text" class="form-control" @bind-value="@DetailTask.SFtpuploadto" />
+
+                </td>
+
+            </tr>
+
+        </table>
+        <br />
+
+
+    </div>
+
+}
+
+@if (schTaskModel.JOBTYPE == "sFTP_Download")
+{
+    <div>
+        @* that the only thing for sftp download *@
+
+        <br />
+        <p>Download Directories: </p>
+        <table style="border: solid 1px #000000;background-color:aliceblue;
+          padding: 5px; width:100%; height: 100%">
+            <tr>
+                <td class="tg-5d1u">
+                    <label style=" font-size:x-small ; color:darkblue">From</label>   <input type="text" class="form-control" @bind-value="@DetailTask.SFtpdownloadFrom" />
+
+                </td>
+                <td class="tg-5d1u">
+                    <label style=" font-size:x-small ; color:darkblue">To</label>    <input type="text" class="form-control" @bind-value="@DetailTask.SFtpdownloadTo" />
+
+                </td>
+
+            </tr>
+
+        </table>
+        <br />
+
+    </div>
+
+}
+
+@if (schTaskModel.JOBTYPE == "SendEmail")
+{
+
+    <p>Download Directories: </p>
+    <table style="border: solid 1px #000000;background-color:aliceblue;
+          padding: 5px; width:100%; height: 100%">
+        <tr>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">Export Folder</label>   <input type="text" class="form-control" @bind-value="@DetailTask.Extra4" />
+
+            </td>
+
+        </tr>
+
+    </table>
+    <br />
+
+    <p>Download Directories: </p>
+    <table style="border: solid 1px #000000;background-color:aliceblue;
+          padding: 5px; width:100%; height: 100%">
+        <tr>
+            <td>
+                <label style=" font-size:x-small ; color:darkblue">Message (html) </label>
+                <textarea type="text" class="form-control" @bind="@DetailTask.Extra5" />
+            </td>
+
+        </tr>
+
+    </table>
+    <br />
+}
+
+@if (schTaskModel.JOBTYPE == "ImportTo_Database")
+{
+    <p>
+        Import files with extension <input type="text" class="form-control" @bind-value="@DetailTask.FileExtensiontoUpload" />
+        from <input type="text" class="form-control" @bind-value="@DetailTask.SFtpuploadFrom" />
+        into table <input type="text" class="form-control" @bind-value="@DetailTask.SFtpuploadto" />
+    </p>
+
+
+
+    @foreach (var item in new string[] { "Truncate", "Append" })
+    {
+      <div>
+    
+         <input type="radio" name="TableTruncate" id="@item" value="@item" @onchange="TruncateYesNo" checked=@(RadioValueTruncate.Equals(item, StringComparison.OrdinalIgnoreCase)) />
+
+         <label for="@item">@item</label>
+      </div>
+
+
+    }
+}
+
+
+
+    @code{
+        [Parameter]
+        public int Id { get; set; }
+        string RadioValueTruncate = "Truncate";
+
+        ImagingTaskModel schTaskModel = new ImagingTaskModel();
+        ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+
+
+        void TruncateYesNo(ChangeEventArgs args)
+        {
+
+            RadioValueTruncate = args.Value.ToString();
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            schTaskModel = await TaskServiceInterface.SingleTask(Id);
+            DetailTask = await DetailTaskServices.SingleTask(Id);
+
+            RadioValueTruncate = DetailTask.Extra1;
+
+        }
+
+    }
