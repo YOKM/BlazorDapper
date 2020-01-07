@@ -6,7 +6,7 @@
 @inject InterfaceDetailTask DetailTaskServices;
 
 
-<h1>Edit Task</h1>
+<h4>Edit Task</h4>
 
 
 <hr />
@@ -76,14 +76,14 @@
 
 
     <br />
-    <p>Description:</p>
+    @*<p>Description:</p> <span></span>*@
     <table style="border: solid 1px #000000;
     padding: 5px; width:100%; height: 100%">
 
         <tr>
             @*<td class="tg-5d1u"><input type="text" class="form-control" value="@EditTask.Description" /></td>*@
             <td>
-                @*<label>Description</label>*@
+                <label>Description</label>
                 <textarea type="text" class="form-control" @bind="@schTaskModel.Description" />
 
             </td>
@@ -242,51 +242,181 @@
 
 @if (schTaskModel.JOBTYPE == "ImportTo_Database")
 {
-    <p>
-        Import files with extension <input type="text" class="form-control" @bind-value="@DetailTask.FileExtensiontoUpload" />
-        from <input type="text" class="form-control" @bind-value="@DetailTask.SFtpuploadFrom" />
-        into table <input type="text" class="form-control" @bind-value="@DetailTask.SFtpuploadto" />
-    </p>
+
+    <div style="width: 100%; overflow: hidden;">
+        <p>Import files</p>
+        <div id="boxes">
+
+            <div id="leftbox">
+                <p>
+                    extension:<span></span>
+                    <input type="text" class="form-control" @bind-value="@DetailTask.FileExtensiontoUpload" />
+                </p>
+            </div>
+
+            <div id="middlebox">
+                <p>
+
+                    from:<span></span>
+                    <input type="text" class="form-control" @bind-value="@DetailTask.SFtpuploadFrom" />
+
+                </p>
+            </div>
+
+            <div id="rightbox">
+                <p>
+                    into table::<span></span>
+                    <input type="text" class="form-control" @bind-value="@DetailTask.SFtpuploadto" />
+                </p>
+            </div>
+        </div>
 
 
 
-    @foreach (var item in new string[] { "Truncate", "Append" })
-    {
-      <div>
+
+    </div>
+
+    @**@
+    @*<div class="row" id="loginForm">
+            <p>Username : <span><input type="text" class="form-control input" id="usr"></span></p>
+        </div>*@
+
+
+
+
+    @*@foreach (var item in new string[] { "Truncate", "Append" })
+        {
+            <div>
+
+                <input type="radio" name="TableTruncate" id="@item" value="@item" @onchange="TruncateYesNo" checked=@(RadioValueTruncate.Equals(item, StringComparison.OrdinalIgnoreCase)) />
+
+                <label for="@item">@item</label>
+            </div>
+
+
+        }
+
+        <p>Header in file?</p>
+        @foreach (var item in new string[] { "YesHeader", "NoHeader" })
+        {
+            <div>
+
+                <input type="radio" name="Header" id="@item" value="@item" @onchange="HeaderYesNo" checked=@(RadioValueHeader.Equals(item, StringComparison.OrdinalIgnoreCase)) />
+
+                <label for="@item">@item</label>
+            </div>
+
+
+        }*@
+
+    <div id="Truncate_Header" style="float:left; width:50%">
+        <select @bind="DetailTask.Extra1">
+            @if (DetailTask.Extra4 != null)
+            {
+                @foreach (var item in new string[] { "Truncate", "Append" })
+                {
+                    <option value=@item>@item </option>
+                }
+            }
+        </select>
+        <select @bind="DetailTask.Extra4">
+            @if (DetailTask.Extra4 != null)
+            {
+                @foreach (var item in new string[] { "YesHeader", "NoHeader" })
+                {
+                    <option value=@item>@item </option>
+                }
+            }
+        </select>
+        <div>
+            <p>in file</p>
+        </div>
+    </div>
+    <p>Add header</p>
+    <input type="text" class="form-control" @bind-value="@DetailTask.Extra2" />
+
     
-         <input type="radio" name="TableTruncate" id="@item" value="@item" @onchange="TruncateYesNo" checked=@(RadioValueTruncate.Equals(item, StringComparison.OrdinalIgnoreCase)) />
-
-         <label for="@item">@item</label>
-      </div>
+    <input type="text" class="form-control" @bind-value="@DetailTask.Extra3" />
 
 
-    }
+
+
+
 }
 
 
 
-    @code{
-        [Parameter]
-        public int Id { get; set; }
-        string RadioValueTruncate = "Truncate";
+<style type="text/css">
+    #leftbox {
+        float: left;
+        /*background: Red;*/
+        width: 10%;
+        /*height: 280px;*/
+    }
 
-        ImagingTaskModel schTaskModel = new ImagingTaskModel();
-        ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+    #middlebox {
+        float: left;
+        /*background: Green;*/
+        width: 65%;
+        /*height: 280px;*/
+    }
+
+    #rightbox {
+        float: right;
+        /*background: blue;*/
+        width: 25%;
+        /*height: 280px;*/
+    }
+
+    h1 {
+        /*color: green;*/
+        text-align: center;
+    }
+</style>
 
 
-        void TruncateYesNo(ChangeEventArgs args)
-        {
 
-            RadioValueTruncate = args.Value.ToString();
-        }
 
-        protected override async Task OnInitializedAsync()
-        {
-            schTaskModel = await TaskServiceInterface.SingleTask(Id);
-            DetailTask = await DetailTaskServices.SingleTask(Id);
 
-            RadioValueTruncate = DetailTask.Extra1;
+@code{
+    [Parameter]
+    public int Id { get; set; }
+    string RadioValueTruncate = "Append";
+    string RadioValueHeader = "NoHeader";
 
-        }
+    ImagingTaskModel schTaskModel = new ImagingTaskModel();
+    ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+
+    void HeaderYesNo(ChangeEventArgs args)
+    {
+
+        RadioValueHeader = args.Value.ToString();
+    }
+
+    void TruncateYesNo(ChangeEventArgs args)
+    {
+
+        RadioValueTruncate = args.Value.ToString();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        schTaskModel = await TaskServiceInterface.SingleTask(Id);
+        DetailTask = await DetailTaskServices.SingleTask(Id);
+
+        RadioValueTruncate = DetailTask.Extra1;
+        RadioValueHeader = DetailTask.Extra4;
+        //if (DetailTask.)
+        //{
+
+
+        //}
 
     }
+
+
+
+
+
+
+}
