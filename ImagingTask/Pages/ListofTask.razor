@@ -15,7 +15,9 @@
 }
 else
 {
-    <table class=" table">
+<div style="height:initial; overflow-y:auto">
+
+    <table class="table table-striped w-auto">
         <thead>
             <tr>
                 <th></th>
@@ -24,6 +26,7 @@ else
                 <th>Is Active</th>
                 <th>Description</th>
                 <th>Job Type</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -33,11 +36,11 @@ else
                     <td>
                         @if (task.Id == JobId)
                         {
-                            <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">+</button>
+                            <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">-</button>
                         }
                         else
                         {
-                            <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">-</button>
+                            <button class="btn btn-primary" @onclick="@(async () => await ShowDetails(task.Id))">+</button>
                         }
 
 
@@ -252,6 +255,10 @@ else
         </tbody>
     </table>
 
+</div>
+
+
+  
 
     <label bind="nav">@count/@(skip + 1)</label>
 
@@ -267,7 +274,12 @@ else
 
 }
 
+<style type="text/css">
 
+  
+
+
+</style>
 
 
 @functions{
@@ -326,14 +338,14 @@ else
         {
             if (showDetail == false)
             {
-                //  Imagename = "Images/expand.png";
+               //   Imagename = "Images/expand.png";
 
                 showDetail = true;
 
             }
             else
             {
-                // Imagename = "Images/toggle.png";
+               //  Imagename = "Images/toggle.png";
                 showDetail = false;
             }
         }

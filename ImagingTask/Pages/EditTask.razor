@@ -4,6 +4,10 @@
 @inject InterfaceImagingTask TaskServiceInterface;
 
 @inject InterfaceDetailTask DetailTaskServices;
+@inject NavigationManager NavigationManager
+
+
+
 
 
 <h4>Edit Task</h4>
@@ -244,7 +248,7 @@
 {
 
     <div style="width: 100%; overflow: hidden;">
-        <p>Import files</p>
+        <label>File to Import:</label>
         <div id="boxes">
 
             <div id="leftbox">
@@ -319,6 +323,8 @@
                 }
             }
         </select>
+        <label> table when Import.   There is </label>
+
         <select @bind="DetailTask.Extra4">
             @if (DetailTask.Extra4 != null)
             {
@@ -328,22 +334,30 @@
                 }
             }
         </select>
-        <div>
-            <p>in file</p>
-        </div>
+        <label>in the file, Header is :</label>
+
+
     </div>
-    <p>Add header</p>
+
     <input type="text" class="form-control" @bind-value="@DetailTask.Extra2" />
 
-    
-    <input type="text" class="form-control" @bind-value="@DetailTask.Extra3" />
+    <label>Delimeter :</label>
 
+    <input type="text" class="form-control" @bind-value="@DetailTask.Extra3" />
 
 
 
 
 }
 
+
+<br />
+<div class="row">
+    <div class="form-group">
+        <input type="button" class="btn btn-primary" @onclick="@UpdateImgaingTask" value="Update" />
+        <input type="button" class="btn" @onclick="@Cancel" value="Cancel" />
+    </div>
+</div>
 
 
 <style type="text/css">
@@ -386,6 +400,19 @@
 
     ImagingTaskModel schTaskModel = new ImagingTaskModel();
     ImagingTaskDetailModel DetailTask = new ImagingTaskDetailModel();
+
+    void Cancel()
+    {
+        NavigationManager.NavigateTo("ListofTask");
+    }
+
+    protected async Task UpdateImgaingTask()
+    {
+        await TaskServiceInterface.EditImagingTask(Id, schTaskModel);
+        await DetailTaskServices.EditImagingTask(Id, DetailTask);
+        NavigationManager.NavigateTo("ListofTask");
+    }
+
 
     void HeaderYesNo(ChangeEventArgs args)
     {

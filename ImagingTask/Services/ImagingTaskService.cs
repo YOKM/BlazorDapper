@@ -31,9 +31,36 @@ namespace ImagingTask.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> EditImagingTask(int jobId, ImagingTaskModel imagingSchTask)
+        public async Task<bool> EditImagingTask(int jobId, ImagingTaskModel imagingSchTask)
         {
-            throw new NotImplementedException();
+            var parameters = new DynamicParameters();
+
+            parameters.Add("Id", jobId, DbType.Int32);
+            parameters.Add("Jobname", imagingSchTask.Jobname,DbType.String);
+            parameters.Add("scheduleTIME", imagingSchTask.scheduleTIME, DbType.String);
+            parameters.Add("IsActive", imagingSchTask.IsActive, DbType.String);
+            parameters.Add("Description", imagingSchTask.Description, DbType.String);
+            parameters.Add("JOBTYPE", imagingSchTask.JOBTYPE, DbType.String);
+            parameters.Add("EmailNotificationAddress", imagingSchTask.EmailNotificationAddress, DbType.String);
+
+
+            using (var conn = new SqlConnection(_configuration.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                try
+                {
+                    await conn.ExecuteAsync("Update_ImagingTask", parameters, commandType: CommandType.StoredProcedure);
+                }
+                catch (Exception ex) { throw ex; }
+                finally
+                {               
+                    if (conn.State == ConnectionState.Open)
+                        conn.Close();
+                }
+                return true;
+            }
+
         }
 
         public async Task<IEnumerable<ImagingTaskModel>> GetAllImagingTask(int takeRow, int skipRow)
