@@ -22,5 +22,9 @@ namespace ImagingTask.Services
 
         Task<bool> DeleteTask(int jobId);
 
+        //search Job
+
+        Task<IEnumerable<ImagingTaskModel>> GetAllImagingTaskByName(string searchtext , int takeRow, int skipRow);
+
     }
 }

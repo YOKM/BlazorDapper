@@ -103,6 +103,56 @@ namespace ImagingTask.Services
 
         }
 
+        public async Task<IEnumerable<ImagingTaskModel>> GetAllImagingTaskByName(string searchtext,int takeRow, int skipRow)
+        {
+            IEnumerable<ImagingTaskModel> imagingTaskModels;
+
+            searchtext = "%" + searchtext + "%";
+
+            const string query = @"select* from dbo.ImagingScheduleJob
+                                    WHERE Jobname like @searchtext OR Description LIKE @searchtext";
+                                   
+
+
+//@"select * from dbo.ImagingScheduleJob 
+//WHERE Jobname like @searchtext OR Description LIKE @searchtext
+//order by Jobname
+// offset @takeRow rows
+// fetch next @skipRow rows only"
+
+
+            //order by Jobname-- this is a MUST there must be ORDER BY statement
+            // --the paging comes here
+            //offset 5 rows-- skip 10 rows
+            //fetch next 4 rows only; --take 10 rows
+
+            using (var conn = new SqlConnection(_configuration.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                try
+                {
+                    //imagingTaskModels = await conn.QueryAsync<ImagingTaskModel>
+                    //    ("Get_AllImagingTask", commandType: CommandType.StoredProcedure);
+
+
+                    imagingTaskModels = await conn.QueryAsync<ImagingTaskModel>(query, new {searchtext, takeRow, skipRow }, commandType: CommandType.Text);
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    if (conn.State == ConnectionState.Open)
+                        conn.Close();
+                }
+            }
+            return imagingTaskModels;
+
+        }
+
         public async Task<ImagingTaskModel> SingleTask(int jobId)
         {
             ImagingTaskModel TaskModel = new ImagingTaskModel();

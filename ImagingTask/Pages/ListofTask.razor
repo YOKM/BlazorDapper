@@ -6,7 +6,13 @@
 @inject InterfaceDetailTask DetailTaskServices
 
 
-<h1></h1>
+<h1>
+</h1>
+
+
+   
+
+
 
 
 @if (AllTasks == null)
@@ -15,7 +21,16 @@
 }
 else
 {
+   
 <div style="height:initial; overflow-y:auto">
+    
+        <input @bind-value="@searchText" @bind-value:event="oninput" @onkeyup="Search"
+               type="text" class="searchTerm" placeholder="Which task you looking for?" />
+        @*<button type="submit" class="searchButton" style="width:3px ; height:20px ;">
+            <i class="fa fa-search"></i>
+        </button>*@
+
+   
 
     <table class="table table-striped w-auto">
         <thead>
@@ -28,6 +43,8 @@ else
                 <th>Job Type</th>
                 <th></th>
             </tr>
+
+
         </thead>
         <tbody>
             @foreach (var task in AllTasks)
@@ -258,7 +275,7 @@ else
 </div>
 
 
-  
+
 
     <label bind="nav">@count/@(skip + 1)</label>
 
@@ -276,9 +293,17 @@ else
 
 <style type="text/css">
 
+
+
+
+
+
+   
+
+    /*Resize the wrap to see the search bar change!*/
+   
   
-
-
+    }
 </style>
 
 
@@ -294,7 +319,7 @@ else
     bool showDetail = false;
     int top = 10;
     int skip = 0;
-
+    string searchText;
 
 
 
@@ -304,6 +329,13 @@ else
         //  count = AllTasks.Count();
         count = 31;
         // AllTasks = AllTasks.Skip(5).Take(3);     // total of task in table
+    }
+
+    async Task Search(KeyboardEventArgs eventArgs)
+    {
+        AllTasks = await ImagingTaskServices.GetAllImagingTaskByName(searchText, 0, top);
+        StateHasChanged();
+
     }
 
     async Task Next()
@@ -338,14 +370,14 @@ else
         {
             if (showDetail == false)
             {
-               //   Imagename = "Images/expand.png";
+                //   Imagename = "Images/expand.png";
 
                 showDetail = true;
 
             }
             else
             {
-               //  Imagename = "Images/toggle.png";
+                //  Imagename = "Images/toggle.png";
                 showDetail = false;
             }
         }
