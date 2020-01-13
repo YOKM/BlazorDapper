@@ -20,6 +20,7 @@ namespace ImagingTask.Services
 
         }
 
+      
 
         public Task<bool> CreateImagingTask(ImagingScheduleJob imagingSchTask)
         {
@@ -103,6 +104,8 @@ namespace ImagingTask.Services
 
         }
 
+     
+
         public async Task<IEnumerable<ImagingTaskModel>> GetAllImagingTaskByName(string searchtext,int takeRow, int skipRow)
         {
             IEnumerable<ImagingTaskModel> imagingTaskModels;
@@ -172,6 +175,36 @@ namespace ImagingTask.Services
                 }
                 return TaskModel;
             }
+        }
+
+       public async Task<int> CountImagingTask()
+        {
+            int total;
+            const string query = @"select count(id) from dbo.ImagingScheduleJob";
+
+
+            using (var conn = new SqlConnection(_configuration.Value))
+            {
+                if (conn.State == ConnectionState.Closed)
+                    conn.Open();
+                try
+                {
+
+
+                    total = await conn.ExecuteScalarAsync<int>(query, commandType: CommandType.Text);
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    if (conn.State == ConnectionState.Open)
+                        conn.Close();
+                }
+            }
+            return total;
         }
     }
 }

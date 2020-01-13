@@ -13,6 +13,7 @@ namespace ImagingTask.Services
     {
       
         Task<IEnumerable<ImagingTaskModel>> GetAllImagingTask(int takeRow, int skipRow);
+        Task<int>  CountImagingTask();
 
         Task<bool> CreateImagingTask(ImagingScheduleJob imagingSchTask);
 
